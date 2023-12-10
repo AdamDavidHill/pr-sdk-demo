@@ -6,17 +6,28 @@ namespace Payroc.Sdk.Web;
 
 internal partial class ApiProxy : IApiProxy
 {
-    private readonly ILoggerFactory? _loggerFactory;
     private readonly IOptions<PayrocOptions> _config;
-    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IPayrocLoggerFactory _loggerFactory;
+    private readonly IPayrocHttpClientFactory _httpClientFactory;
+    private ILogger? _logger;
 
-    public ApiProxy(ILoggerFactory? loggerFactory, IOptions<PayrocOptions> config, IHttpClientFactory httpClientFactory)
-        => (_loggerFactory, _config, _httpClientFactory)
-        = (loggerFactory, config, httpClientFactory);
+    public ApiProxy(IOptions<PayrocOptions> config, IPayrocLoggerFactory loggerFactory, IPayrocHttpClientFactory httpClientFactory)
+        => (_config, _loggerFactory, _httpClientFactory)
+        = (config, loggerFactory, httpClientFactory);
 
-    private HttpClient HttpClient => _httpClientFactory.CreateClient(nameof(ApiProxy));
+    // How we'd access the HttpClient in a class like this
+    private HttpClient HttpClient => _httpClientFactory.HttpClient;
 
-    private ILogger<PayrocService>? Logger => _loggerFactory?.CreateLogger<PayrocService>();
+    // How we'd access the logger in a class like this, could 
+    private ILogger Logger
+    {
+        get
+        {
+            _logger ??= _loggerFactory.CreateLogger(nameof(PayrocService));
+
+            return _logger;
+        }
+    }
 
     private Task<Result<TResult>> CallApi<TResult>(HttpMethod method, string url, CancellationToken cancellationToken) where TResult : class
         => CallApi<TResult>(method, url, null, cancellationToken);

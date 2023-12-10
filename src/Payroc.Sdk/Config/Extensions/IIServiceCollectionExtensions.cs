@@ -11,6 +11,8 @@ public static class IIServiceCollectionExtensions
         => services
             .AddScoped<IPayrocService, PayrocService>()
             .AddScoped<IApiProxy, ApiProxy>()
+            .AddScoped<IPayrocLoggerFactory, PayrocLoggerFactory>()
+            .AddScoped<IPayrocHttpClientFactory, PayrocHttpClientFactory>()        
             .AddSingleton<IValidateOptions<PayrocOptions>, PayrocConfigValidator>()
             .Configure<PayrocOptions>(payrocConfigSection)
             .AddSingleton(container => container.GetService<IOptions<PayrocOptions>>()!.Value); // Trigger an `OptionsValidationException` if config is bad / unset
@@ -19,6 +21,8 @@ public static class IIServiceCollectionExtensions
         => services
             .AddScoped<IPayrocService, PayrocService>()
             .AddScoped<IApiProxy, ApiProxy>()
+            .AddScoped<IPayrocLoggerFactory, PayrocLoggerFactory>()
+            .AddScoped<IPayrocHttpClientFactory, PayrocHttpClientFactory>()
             .AddSingleton<IValidateOptions<PayrocOptions>, PayrocConfigValidator>()
             .AddOptions<PayrocOptions>()
             .BindConfiguration(configSectionPath)
@@ -29,6 +33,8 @@ public static class IIServiceCollectionExtensions
         => services
             .AddScoped<IPayrocService, PayrocService>()
             .AddScoped<IApiProxy, ApiProxy>()
+            .AddScoped<IPayrocLoggerFactory, PayrocLoggerFactory>()
+            .AddScoped<IPayrocHttpClientFactory, PayrocHttpClientFactory>()
             .AddSingleton<IValidateOptions<PayrocOptions>, PayrocConfigValidator>()
             .Configure(configureOptions)
             .AddSingleton(container => container.GetService<IOptions<PayrocOptions>>()!.Value); // Trigger an `OptionsValidationException` if config is bad / unset
@@ -37,6 +43,8 @@ public static class IIServiceCollectionExtensions
         => services
             .AddScoped<IPayrocService, PayrocService>()
             .AddScoped<IApiProxy, ApiProxy>()
+            .AddScoped<IPayrocLoggerFactory, PayrocLoggerFactory>()
+            .AddScoped<IPayrocHttpClientFactory, PayrocHttpClientFactory>()
             .AddSingleton<IValidateOptions<PayrocOptions>, PayrocConfigValidator>()
             .AddOptions<PayrocOptions>()
             .Configure(o =>

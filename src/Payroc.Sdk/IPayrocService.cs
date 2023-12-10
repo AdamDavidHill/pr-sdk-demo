@@ -8,5 +8,5 @@ namespace Payroc.Sdk;
 public interface IPayrocService
 {
     IPayrocSession CreateSession();
-    string CreateIdempotencyToken() => Guid.NewGuid().ToString().ToUpper();
+    string CreateIdempotencyKey() => Guid.NewGuid().ToString().ToUpper();
 }

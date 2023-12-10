@@ -7,9 +7,18 @@ using Payroc.Sdk.Config.Extensions;
 
 namespace Payroc.Sdk.TestHarness;
 
-internal class ConfigExamples
+internal class DIConfig
 {
-    public static IHost HostSetupExample1()
+    public static (int Index, IHost Host)[] Examples
+        => new (int, IHost)[]
+        {
+            (1, HostSetup1()),
+            (2, HostSetup2()),
+            (3, HostSetup3()),
+            (4, HostSetup4())
+        };
+
+    public static IHost HostSetup1()
         => Host.CreateDefaultBuilder()
                     .ConfigureAppConfiguration((context, builder) =>
                     {
@@ -28,7 +37,7 @@ internal class ConfigExamples
                     })
                     .Build();
 
-    public static IHost HostSetupExample2()
+    public static IHost HostSetup2()
         => Host.CreateDefaultBuilder()
                     .ConfigureAppConfiguration((context, builder) =>
                     {
@@ -43,7 +52,7 @@ internal class ConfigExamples
                     })
                     .Build();
 
-    public static IHost HostSetupExample3()
+    public static IHost HostSetup3()
         => Host.CreateDefaultBuilder()
                     .ConfigureAppConfiguration((context, builder) =>
                     {
@@ -58,7 +67,7 @@ internal class ConfigExamples
                     })
                     .Build();
 
-    public static IHost HostSetupExample4()
+    public static IHost HostSetup4()
         => Host.CreateDefaultBuilder()
                     .ConfigureAppConfiguration((context, builder) =>
                     {
@@ -73,7 +82,7 @@ internal class ConfigExamples
                             {
                                 options.ApiKey = "test";
                                 options.Environment = PayrocEnvironment.LocalEmulation;
-                            });         
+                            });
                     })
                     .Build();
 }
