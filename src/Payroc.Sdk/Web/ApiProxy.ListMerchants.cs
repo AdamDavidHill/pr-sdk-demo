@@ -18,8 +18,8 @@ internal partial class ApiProxy
     private Task<Result<IListMerchantPlatformsResponse>> CallListMerchants(IOAuthSessionState session, IListMerchantParameters parameters, CancellationToken cancellationToken)
         => _config.Value.Environment switch
         {
-            PayrocEnvironment.Live => CallApi<IListMerchantPlatformsResponse>(HttpMethod.Get, UrlFrom(PayrocUrls.Merchant, parameters), cancellationToken),
-            PayrocEnvironment.Test => CallApi<IListMerchantPlatformsResponse>(HttpMethod.Get, UrlFrom(PayrocUrls.MerchantTest, parameters), cancellationToken),
+            PayrocEnvironment.Live => CallApi<IListMerchantPlatformsResponse>(session, HttpMethod.Get, UrlFrom(PayrocUrls.Merchant, parameters), cancellationToken),
+            PayrocEnvironment.Test => CallApi<IListMerchantPlatformsResponse>(session, HttpMethod.Get, UrlFrom(PayrocUrls.MerchantTest, parameters), cancellationToken),
             _ => EmulatedListMerchants()
         };
 

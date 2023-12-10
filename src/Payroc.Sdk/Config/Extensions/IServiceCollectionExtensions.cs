@@ -6,7 +6,7 @@ using Payroc.Sdk.Web;
 
 namespace Payroc.Sdk.Config.Extensions;
 
-public static class IIServiceCollectionExtensions
+public static class IServiceCollectionExtensions
 {
     public static IServiceCollection AddPayroc(this IServiceCollection services, IConfigurationSection payrocConfigSection)
         => services

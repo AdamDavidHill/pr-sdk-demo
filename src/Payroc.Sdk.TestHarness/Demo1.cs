@@ -12,7 +12,7 @@ internal class Demo1
         var payroc = PayrocService.Create(Config, HttpClient, Logger);
         await payroc
                 .CreateSession()
-                .CreateMerchant(payroc.CreateIdempotencyKey(), Data);
+                .CreateMerchant(IdempotencyKey.New(), Data);
     }
 
     // Remaining code in this file is quick & dirty helpers for demo purposes just to clean up the code above

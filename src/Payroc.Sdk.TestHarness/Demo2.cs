@@ -23,23 +23,23 @@ internal class Demo2
     private Task SimpleExample(IPayrocService payroc)
         => payroc
             .CreateSession()
-            .CreateMerchant(payroc.CreateIdempotencyKey(), Data1);
+            .CreateMerchant(IdempotencyKey.New(), Data1);
 
     private async Task SessionReuseExample(IPayrocService payroc)
     {
         var session = payroc.CreateSession();
-        _ = await session.CreateMerchant(payroc.CreateIdempotencyKey(), Data2);
-        _ = await session.ListMerchants(payroc.CreateIdempotencyKey()); // Re-using same session reference for followup call
+        _ = await session.CreateMerchant(IdempotencyKey.New(), Data2);
+        _ = await session.ListMerchants(); // Re-using same session reference for followup call
     }
 
     private async Task ErrorHandlingExample(IPayrocService payroc)
     {
         var session = payroc.CreateSession();
-        var createdResult = await session.CreateMerchant(payroc.CreateIdempotencyKey(), Data2);
+        var createdResult = await session.CreateMerchant(IdempotencyKey.New(), Data2);
 
         if (createdResult.IsSuccess)
         {
-            var listMerchantsResult = await session.ListMerchants(payroc.CreateIdempotencyKey()); // Re-using same session reference for followup call
+            var listMerchantsResult = await session.ListMerchants(); // Re-using same session reference for followup call
 
             if (listMerchantsResult.IsSuccess)
             {

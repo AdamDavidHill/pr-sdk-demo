@@ -5,7 +5,7 @@ A demonstration of SDK design thinking, in relation to the [Payroc Merchant APIs
 > [!WARNING]  
 > This code is purely illustrative, presented in order to communicate SDK design ideas. None of it ought to be considered tested, or ready for use. 
 
-## Getting Started
+## Overview
 
 Although Nuget would be used in a real scenario, for this demo a Test Harness project with a project reference is employed. It demonstrates usage of the SDK.
 
@@ -15,26 +15,28 @@ Although Nuget would be used in a real scenario, for this demo a Test Harness pr
 | --- | --- |
 | [Demo1.cs](/src/Payroc.Sdk.TestHarness/Demo1.cs)                         | Simple non-DI-based SDK use |
 | [Demo2.cs](/src/Payroc.Sdk.TestHarness/Demo2.cs)                         | More elaborate SDK use (with DI) |
-| [DIConfig.cs](/src/Payroc.Sdk.TestHarness/DIConfig.cs)                   | Options for DI config |
-| [TestDataGenerator.cs](/src/Payroc.Sdk.TestHarness/TestDataGenerator.cs) | Builder pattern(s) for creating models |
+| [DIConfig.cs](/src/Payroc.Sdk.TestHarness/DIConfig.cs)                   | Options for wiring up DI config |
+| [TestDataGenerator.cs](/src/Payroc.Sdk.TestHarness/TestDataGenerator.cs) | Fluent Builder-like helpers for creating models |
 
 ### Recommended Browsing (Implementation Highlights)
 
 | File                                                                                                      | What it demonstrates |
 | --- | --- |
 | [PayrocService.cs](/src/Payroc.Sdk/PayrocService.cs)                                                      | Main SDK "entry point" |
-| [IIServiceCollectionExtensions.cs](/src/Payroc.Sdk/Config/Extensions/IIServiceCollectionExtensions.cs)    | Internals of DI approaches |
+| [IServiceCollectionExtensions.cs](/src/Payroc.Sdk/Config/Extensions/IServiceCollectionExtensions.cs)      | Internals of DI approaches |
 | [PayrocSession.Authentication.cs](/src/Payroc.Sdk/Web/PayrocSession.Authentication.cs)                    | Caching tokens, and passing API calls through `EnsureAuthenticated` to hide OAuth complexity |
 | [IPayrocSession.cs](/src/Payroc.Sdk/Web/IPayrocSession.cs)                                                | Typical top-level UX of an API call |
 | [ApiProxy.cs](/src/Payroc.Sdk/Web/ApiProxy.cs)                                                            | Main guts of API calls (note adjacent `partial class` variations |
 | [ApiProxy.cs](/src/Payroc.Sdk/Web/ApiProxy.cs)                                                            | Main guts of API calls (note adjacent `partial class` variations |
 | [PayrocLoggerFactory.cs](/src/Payroc.Sdk/Dependencies/PayrocLoggerFactory.cs)                             | How to allow both DI loggers and manual construction |
 
+## Getting Started (Using the SDK)
+
 ### IConfiguration Setup Version
 
-This approach lets the user provide their configuration via IConfiguration, such as AppSettings, and/or environment variables etc.
+This approach lets the user provide their configuration via IConfiguration, such as `appsettings.json`, and/or environment variables loaded into `IConfiguration` etc.
 
-Configuration would look as follows:
+Configuration in `appsettings.json`:
 
 ```json
 {
@@ -45,27 +47,83 @@ Configuration would look as follows:
 }
 ```
 
-As per [MS guidance](https://learn.microsoft.com/en-us/dotnet/core/extensions/options-library-authors#iconfiguration-parameter), an extension method, `AddPayroc`, provides a simple setup in `Program.cs`:
+As per [MS guidance](https://learn.microsoft.com/en-us/dotnet/core/extensions/options-library-authors#iconfiguration-parameter), an extension method, `AddPayroc`, provides a simple hook to handle all the configuration.
+[DIConfig.cs](/src/Payroc.Sdk.TestHarness/DIConfig.cs) demonstrates four variations/overloads.
+
+#### Pre-requisite
 
 ```csharp
 using Payroc.Sdk.Config.Extensions;
 using Microsoft.Extensions.Hosting;
-
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
+```
+
+#### Overload 1
+```csharp
 builder.Services.AddPayroc(builder.Configuration.GetSection("Payroc"));
 ```
 
-## Ideas
+#### Overload 2
+```csharp
+builder.Services.AddPayroc(new PayrocOptions
+                            {
+                                ApiKey = "test",
+                                Environment = PayrocEnvironment.LocalEmulation
+                            });
+```
 
-### Logging
+#### Overload 3
+```csharp
+builder.Services.AddPayroc("Payroc"); // Name of the config section in `appsettings.json`
+```
 
-Have safe ILoggerFactory implementation by default.
-Enable overriding of logging via passing in function.
-Offer sync & async functions? Most logging implementations are synchronous, so might be barrier to entry for some users declaring async lambdas.
+#### Overload 4
+```csharp
+builder.Services.AddPayroc(options =>
+                            {
+                                options.ApiKey = "test";
+                                options.Environment = PayrocEnvironment.LocalEmulation;
+                            });
+```
+
+## Small Details
+
+Some details which might be easy to miss:
+
+### Floating Version References
+
+- We use floating references for Nuget dependencies, e.g. `Version="8.*"`, to be more flexible.
+- We trigger validation of the config on startup, as the SDK can't function successfully if misconfigured
+- `PayrocEnvironment` implies building an emulator mode directly into the SDK, so the end user doesn't need to manage an Emulator container etc.
+
+
+## Bits I'm Not 100% Happy With
+
+### Plain ILogger
+
+I don't love the trade off mentioned in [PayrocLoggerFactory.cs](/src/Payroc.Sdk/Dependencies/PayrocLoggerFactory.cs), so might be worth more thought around this.
+
+### 3rd Party Dependency Injection
+
+I'd definitely need to test how the DI setup patterns work with 3rd Party DI libraries like [Lamar](https://jasperfx.github.io/lamar/). If this were a problem, then additional package variations could be created offering specific support for those libraries.
+
+### Idempotency Key
+
+At a glance I'm not sure where's best to put creation of this. I could see any of these being reasonable, depending on use case:
+
+- Force user to knowingly create it via `IdempotencyKey.New()`, which gives them a reference they can store
+- Hide it internally, if we're confident that normal SDK use doesn't warrant it
+- Optionally allow user to specify / store, and otherwise handle it internally
+
+## Ideas for Improvement
+
+### Logging Function
+
+Offer support to provide an anonymous logging function instead of an `Ilogger`. Might muddy the signatures, but could be handy for obscure logging behaviours.
 
 ### Multi-targeting
 
-Support all LTS versions (6 + 8), and potentially the most recent non-LTS version.
+Support all LTS versions (6 & 8), and potentially one recent non-LTS version.
 
 This can sometimes be as simple as changing:
 ```xml

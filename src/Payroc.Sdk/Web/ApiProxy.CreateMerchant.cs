@@ -6,7 +6,7 @@ namespace Payroc.Sdk.Web;
 
 internal partial class ApiProxy
 {
-    public Task<Result> CreateMerchant(IOAuthSessionState session, string idempotencyKey, Merchant merchant, CancellationToken cancellationToken)
+    public Task<Result> CreateMerchant(IOAuthSessionState session, IdempotencyKey idempotencyKey, Merchant merchant, CancellationToken cancellationToken)
     {
         Logger?.BeginScope(typeof(ApiProxy));
         Logger?.LogDebug("Creating Merchant {Id}", merchant.MerchantPlatformId);
@@ -14,11 +14,11 @@ internal partial class ApiProxy
         return CallCreateMerchant(session, idempotencyKey, merchant, cancellationToken);
     }
 
-    private Task<Result> CallCreateMerchant(IOAuthSessionState session, string idempotencyKey, Merchant merchant, CancellationToken cancellationToken)
+    private Task<Result> CallCreateMerchant(IOAuthSessionState session, IdempotencyKey idempotencyKey, Merchant merchant, CancellationToken cancellationToken)
         => _config.Value.Environment switch
         {
-            PayrocEnvironment.Live => CallApi(HttpMethod.Post, PayrocUrls.Merchant, BodyFrom(merchant), CreateMerchantHeaders(idempotencyKey), cancellationToken),
-            PayrocEnvironment.Test => CallApi(HttpMethod.Post, PayrocUrls.MerchantTest, BodyFrom(merchant), CreateMerchantHeaders(idempotencyKey), cancellationToken),
+            PayrocEnvironment.Live => CallApi(session, HttpMethod.Post, PayrocUrls.Merchant, BodyFrom(merchant), CreateMerchantHeaders(idempotencyKey), cancellationToken),
+            PayrocEnvironment.Test => CallApi(session, HttpMethod.Post, PayrocUrls.MerchantTest, BodyFrom(merchant), CreateMerchantHeaders(idempotencyKey), cancellationToken),
             _ => EmulatedCreateMerchant()
         };
 
@@ -29,11 +29,11 @@ internal partial class ApiProxy
         return "dummy implementation";
     }
 
-    private Dictionary<string, string> CreateMerchantHeaders(string idempotencyKey)
+    private Dictionary<string, string> CreateMerchantHeaders(IdempotencyKey idempotencyKey)
         => new()
         {
             { "Content-Type", "application/Json" },
-            { "Idempotency-Key", idempotencyKey }
+            { "Idempotency-Key", idempotencyKey.Value }
         };
 
     private Task<Result> EmulatedCreateMerchant()

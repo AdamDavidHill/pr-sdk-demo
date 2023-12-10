@@ -31,9 +31,12 @@ internal partial class ApiProxy : IApiProxy
     }
 
     private Task<Result<TResult>> CallApi<TResult>(HttpMethod method, string url, CancellationToken cancellationToken) where TResult : class
-        => CallApi<TResult>(method, url, null, cancellationToken);
+        => CallApi<TResult>(null, method, url, null, cancellationToken);
 
-    private Task<Result<TResult>> CallApi<TResult>(HttpMethod method, string url, string? content, CancellationToken cancellationToken) where TResult : class
+    private Task<Result<TResult>> CallApi<TResult>(IOAuthSessionState? session, HttpMethod method, string url, CancellationToken cancellationToken) where TResult : class
+        => CallApi<TResult>(session, method, url, null, cancellationToken);
+
+    private Task<Result<TResult>> CallApi<TResult>(IOAuthSessionState? session, HttpMethod method, string url, string? content, CancellationToken cancellationToken) where TResult : class
     {
         /*
          Dummy implementation, real one would deserialize / extract tokens
@@ -55,12 +58,12 @@ internal partial class ApiProxy : IApiProxy
         return Task.FromResult(Result<TResult>.Ok(default!));
     }
 
-    private Task<Result> CallApi<T>(HttpMethod method, string url, string? content, Dictionary<string, string> headers, CancellationToken cancellationToken)
-        => CallApi(method, url, content, headers, cancellationToken);
+    private Task<Result> CallApi<T>(IOAuthSessionState session, HttpMethod method, string url, string? content, Dictionary<string, string> headers, CancellationToken cancellationToken)
+        => CallApi(session, method, url, content, headers, cancellationToken);
 
-    private Task<Result> CallApi(HttpMethod method, string url, CancellationToken cancellationToken)
-        => CallApi(method, url, null, new() { }, cancellationToken);
+    private Task<Result> CallApi(IOAuthSessionState session, HttpMethod method, string url, CancellationToken cancellationToken)
+        => CallApi(session, method, url, null, new() { }, cancellationToken);
 
-    private Task<Result> CallApi(HttpMethod method, string url, string? content, Dictionary<string, string> headers, CancellationToken cancellationToken)
+    private Task<Result> CallApi(IOAuthSessionState session, HttpMethod method, string url, string? content, Dictionary<string, string> headers, CancellationToken cancellationToken)
         => Task.FromResult(Result.Ok());
 }
