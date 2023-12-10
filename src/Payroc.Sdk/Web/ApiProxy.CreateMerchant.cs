@@ -8,8 +8,8 @@ internal partial class ApiProxy
 {
     public Task<Result> CreateMerchant(IOAuthSessionState session, string idempotencyKey, Merchant merchant, CancellationToken cancellationToken)
     {
-        _logger?.BeginScope(typeof(ApiProxy));
-        _logger?.LogDebug("Creating Merchant {Id}", merchant.MerchantPlatformId);
+        Logger?.BeginScope(typeof(ApiProxy));
+        Logger?.LogDebug("Creating Merchant {Id}", merchant.MerchantPlatformId);
 
         return CallCreateMerchant(session, idempotencyKey, merchant, cancellationToken);
     }

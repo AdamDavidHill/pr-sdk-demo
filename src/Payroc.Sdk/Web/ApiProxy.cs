@@ -6,15 +6,17 @@ namespace Payroc.Sdk.Web;
 
 internal partial class ApiProxy : IApiProxy
 {
-    private readonly ILogger<PayrocService>? _logger;
+    private readonly ILoggerFactory? _loggerFactory;
     private readonly IOptions<PayrocOptions> _config;
     private readonly IHttpClientFactory _httpClientFactory;
 
-    public ApiProxy(ILogger<PayrocService>? logger, IOptions<PayrocOptions> config, IHttpClientFactory httpClientFactory)
-        => (_logger, _config, _httpClientFactory)
-        = (logger, config, httpClientFactory);
+    public ApiProxy(ILoggerFactory? loggerFactory, IOptions<PayrocOptions> config, IHttpClientFactory httpClientFactory)
+        => (_loggerFactory, _config, _httpClientFactory)
+        = (loggerFactory, config, httpClientFactory);
 
     private HttpClient HttpClient => _httpClientFactory.CreateClient(nameof(ApiProxy));
+
+    private ILogger<PayrocService>? Logger => _loggerFactory?.CreateLogger<PayrocService>();
 
     private Task<Result<TResult>> CallApi<TResult>(HttpMethod method, string url, CancellationToken cancellationToken) where TResult : class
         => CallApi<TResult>(method, url, null, cancellationToken);

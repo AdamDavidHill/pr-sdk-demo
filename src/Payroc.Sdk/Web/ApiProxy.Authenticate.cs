@@ -7,8 +7,8 @@ internal partial class ApiProxy
 {
     public Task<Result<IOAuthSessionState>> Authenticate(CancellationToken cancellationToken)
     {
-        _logger?.BeginScope(typeof(ApiProxy));
-        _logger?.LogDebug("Authenticating Payroc session.");
+        Logger?.BeginScope(typeof(ApiProxy));
+        Logger?.LogDebug("Authenticating Payroc session.");
 
         return AuthenticateForEnvironment(cancellationToken);
     }

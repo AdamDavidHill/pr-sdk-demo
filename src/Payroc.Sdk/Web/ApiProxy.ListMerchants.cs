@@ -9,8 +9,8 @@ internal partial class ApiProxy
 {
     public Task<Result<IListMerchantPlatformsResponse>> ListMerchants(IOAuthSessionState session, IListMerchantParameters queryParameters, CancellationToken cancellationToken)
     {
-        _logger?.BeginScope(typeof(ApiProxy));
-        _logger?.LogDebug("Getting up to {Limit} Merchant Platforms", queryParameters.Limit);
+        Logger?.BeginScope(typeof(ApiProxy));
+        Logger?.LogDebug("Getting up to {Limit} Merchant Platforms", queryParameters.Limit);
         
         return CallListMerchants(session, queryParameters, cancellationToken);
     }
