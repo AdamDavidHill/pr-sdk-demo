@@ -1,4 +1,4 @@
-﻿namespace Payroc.Sdk.Web;
+﻿namespace Payroc.Sdk.Dependencies;
 
 // Wraps the handling of HttpClient so we can make DI and manual construction solutions interchangeable
 internal partial class PayrocHttpClientFactory : IPayrocHttpClientFactory

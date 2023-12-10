@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace Payroc.Sdk.Web;
+namespace Payroc.Sdk.Dependencies;
 
 // Wraps the handling of ILogger so we can make DI and manual construction solutions interchangeable
-// We lose some of the typed richness of not using ILogger<T>, but compensate a little using named loggers when made via DI
+// We trade off some of the typed richness of not using ILogger<T>, but compensate a little using named loggers when made via DI
 internal partial class PayrocLoggerFactory : IPayrocLoggerFactory
 {
     private readonly ILoggerFactory? _loggerFactory;

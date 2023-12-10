@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Payroc.Sdk.Config;
+using Payroc.Sdk.Dependencies;
 
 namespace Payroc.Sdk.Web;
 

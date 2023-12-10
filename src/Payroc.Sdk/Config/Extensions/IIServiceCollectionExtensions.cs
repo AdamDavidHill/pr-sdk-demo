@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Payroc.Sdk.Dependencies;
 using Payroc.Sdk.Web;
 
 namespace Payroc.Sdk.Config.Extensions;

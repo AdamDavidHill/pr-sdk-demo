@@ -1,23 +1,34 @@
 # pr-sdk-demo
 
-A demonstration of SDK design thinking, in relation to the Payroc Merchant APIs:
+A demonstration of SDK design thinking, in relation to the [Payroc Merchant APIs](https://docs.payroc.com/api).
 
-- https://docs.payroc.com/api/resources#createMerchant
-- https://docs.payroc.com/api/resources#listMerchantPlatforms
-
-## Warning
-
-None of this code is presented as tested, working or fit for use. It is purely illustrative, presented in order to communicate SDK design ideas.
+> [!WARNING]  
+> This code is purely illustrative, presented in order to communicate SDK design ideas. None of it ought to be considered tested, or ready for use. 
 
 ## Getting Started
 
-Although Nuget would be used in a real scenario, for this demo, the Test Harness project has a direct project reference to the SDK project. It demonstrates usage of the SDK.
+Although Nuget would be used in a real scenario, for this demo a Test Harness project with a project reference is employed. It demonstrates usage of the SDK.
 
-```xml
-<ItemGroup>
-    <ProjectReference Include="..\Payroc.Sdk\Payroc.Sdk.csproj" />
-</ItemGroup>
-```
+### Recommended Browsing (Client's Eye View)
+
+|---|---|
+| File                                                                     | What it demonstrates |
+| [Demo1.cs](/src/Payroc.Sdk.TestHarness/Demo1.cs)                         | Simple non-DI-based SDK use |
+| [Demo2.cs](/src/Payroc.Sdk.TestHarness/Demo2.cs)                         | More elaborate SDK use (with DI) |
+| [DIConfig.cs](/src/Payroc.Sdk.TestHarness/DIConfig.cs)                   | Options for DI config |
+| [TestDataGenerator.cs](/src/Payroc.Sdk.TestHarness/TestDataGenerator.cs) | Builder pattern(s) for creating models |
+
+### Recommended Browsing (Implementation Highlights)
+
+|---|---|
+| File                                                                                                      | What it demonstrates |
+| [PayrocService.cs](/src/Payroc.Sdk/PayrocService.cs)                                                      | Main SDK "entry point" |
+| [IIServiceCollectionExtensions.cs](/src/Payroc.Sdk/Config/Extensions/IIServiceCollectionExtensions.cs)    | Internals of DI approaches |
+| [PayrocSession.Authentication.cs](/src/Payroc.Sdk/Web/PayrocSession.Authentication.cs)                    | Caching tokens, and passing API calls through `EnsureAuthenticated` to hide OAuth complexity |
+| [IPayrocSession.cs](/src/Payroc.Sdk/Web/IPayrocSession.cs)                                                | Typical top-level UX of an API call |
+| [ApiProxy.cs](/src/Payroc.Sdk/Web/ApiProxy.cs)                                                            | Main guts of API calls (note adjacent `partial class` variations |
+| [ApiProxy.cs](/src/Payroc.Sdk/Web/ApiProxy.cs)                                                            | Main guts of API calls (note adjacent `partial class` variations |
+| [PayrocLoggerFactory.cs](/src/Payroc.Sdk/Dependencies/PayrocLoggerFactory.cs)                             | How to allow both DI loggers and manual construction |
 
 ### IConfiguration Setup Version
 

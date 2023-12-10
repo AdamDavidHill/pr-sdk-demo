@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace Payroc.Sdk.Web;
+namespace Payroc.Sdk.Dependencies;
 
 internal interface IPayrocLoggerFactory
 {

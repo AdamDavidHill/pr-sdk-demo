@@ -1,4 +1,4 @@
-﻿namespace Payroc.Sdk.Web;
+﻿namespace Payroc.Sdk.Dependencies;
 
 internal interface IPayrocHttpClientFactory
 {
