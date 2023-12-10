@@ -119,21 +119,21 @@ At a glance I'm not sure where's best to put creation of this. I could see any o
 
 ### Logging Function
 
-Offer support to provide an anonymous logging function instead of an `Ilogger`. Might muddy the signatures, but could be handy for obscure logging behaviours.
+Offer support to provide an anonymous logging function instead of an `ILogger`. Might muddy the signatures, but could be handy for obscure logging behaviours.
 
 ### Multi-targeting
 
-Support all LTS versions (6 & 8), and potentially one recent non-LTS version.
+Support all LTS versions (currently 6 & 8), and potentially one recent non-LTS version.
 
 This can sometimes be as simple as changing:
 ```xml
  <TargetFramework>net8.0</TargetFramework>
 ```
-to
+to:
 ```xml
  <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
 ```
-Depending on usage of recent .Net features.
+Depending on usage of recent .Net features internally.
 
 ### Singleton OAuth & Single-Threaded Authentication
 
@@ -179,3 +179,4 @@ e.g. [XML Docs within a Nuget package](https://stackoverflow.com/questions/52057
 ### Misc Ongoing Checks
 
 - Check `.ConfigureAwait(false)` when `await`ing inside the SDK
+- Check AOT compatibility
