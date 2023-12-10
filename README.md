@@ -135,16 +135,17 @@ to
 ```
 Depending on usage of recent .Net features.
 
-### Add Semophore to AuthenticationService
+### Singleton OAuth & Single-Threaded Authentication
 
-To prevent unnecessary Auth calls we could limit this to blocking access.
+Rather than scope-specific sessions / auth tokens, we could go for a global single reusable state. To prevent unnecessary Auth calls we could limit this to blocking access with a SemaphoreSlim. This might improve performance in terms of reducing unnecessary auth calls from independent parts of a user's application, but might trip up their parallel testing. Part of the design at the moment is to delegate this issue to the user, by giving them a handle on the `IPayrocSession` object, which they can choose how to handle it.
 
 ### Model Builders
 
-- Implement [Fluent Builder Pattern](https://betterprogramming.pub/improve-code-readability-with-fluent-builder-pattern-in-c-4cfbf57159df) to make creation of deep models easier / cleaner
+My [Fluent Builder](https://betterprogramming.pub/improve-code-readability-with-fluent-builder-pattern-in-c-4cfbf57159df) implementation is a bit of a quick hack at the moment. This could adopt a more formal builder pattern, with a builder class and an explicit final `Build()` step. This is perhaps more conventional, but I don't mind the current one too much.
 
 ```csharp
-var model = new Merchant(merchantPlatformId: "123456")
+var model = new MerchantBuilder()
+    .WithId("123456")
     .WithBusiness(name: "Example corp", taxId: "xxx-xx-4321", organizationType: "privateCorporation", countryOfOperation: "US")
     .WithAddress(addr1)
     .WithAddress(addr2)
@@ -161,12 +162,12 @@ var model = new Merchant(merchantPlatformId: "123456")
 e.g.
 
 ```csharp
-var modelValidationResult = new Merchant(merchantPlatformId: "123456")
+var model = new MerchantBuilder()
+    .WithId("123456")
     .WithBusiness(name: "Example corp", taxId: "xxx-xx-4321", organizationType: "privateCorporation", countryOfOperation: "US")
     .WithAddress(addr1)
     .WithContactMethod(ContactMethodType.Phone, "123 456 7890")
-    .Build()
-    .Validate();
+    .ValidatingBuild();
 ```
 
 ### /// XML docs 
@@ -175,6 +176,6 @@ Although it's a maintenance burden, full documentation of methods, types etc. ca
 
 e.g. [XML Docs within a Nuget package](https://stackoverflow.com/questions/5205738/how-do-you-include-xml-docs-for-a-class-library-in-a-nuget-package)
 
-### Misc
+### Misc Ongoing Checks
 
-- Check `.ConfigureAwait(false)` when `await`ing
+- Check `.ConfigureAwait(false)` when `await`ing inside the SDK
