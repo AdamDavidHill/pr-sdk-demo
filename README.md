@@ -11,8 +11,8 @@ Although Nuget would be used in a real scenario, for this demo a Test Harness pr
 
 ### Recommended Browsing (Client's Eye View)
 
-|---|---|
 | File                                                                     | What it demonstrates |
+| --- | --- |
 | [Demo1.cs](/src/Payroc.Sdk.TestHarness/Demo1.cs)                         | Simple non-DI-based SDK use |
 | [Demo2.cs](/src/Payroc.Sdk.TestHarness/Demo2.cs)                         | More elaborate SDK use (with DI) |
 | [DIConfig.cs](/src/Payroc.Sdk.TestHarness/DIConfig.cs)                   | Options for DI config |
@@ -20,8 +20,8 @@ Although Nuget would be used in a real scenario, for this demo a Test Harness pr
 
 ### Recommended Browsing (Implementation Highlights)
 
-|---|---|
 | File                                                                                                      | What it demonstrates |
+| --- | --- |
 | [PayrocService.cs](/src/Payroc.Sdk/PayrocService.cs)                                                      | Main SDK "entry point" |
 | [IIServiceCollectionExtensions.cs](/src/Payroc.Sdk/Config/Extensions/IIServiceCollectionExtensions.cs)    | Internals of DI approaches |
 | [PayrocSession.Authentication.cs](/src/Payroc.Sdk/Web/PayrocSession.Authentication.cs)                    | Caching tokens, and passing API calls through `EnsureAuthenticated` to hide OAuth complexity |
