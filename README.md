@@ -88,6 +88,8 @@ builder.Services.AddPayroc(options =>
 
 ### Example SDK calls
 
+These assume an instance of an `IPayrocService` called `payroc`, injected or constructed via `PayrocService.Create(Config, HttpClient, Logger)`.
+
 #### Simple
 
 ```csharp
