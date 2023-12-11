@@ -32,7 +32,7 @@ Although Nuget would be used in a real scenario, for this demo a Test Harness pr
 
 ## Getting Started (Using the SDK)
 
-### IConfiguration Setup Version
+### IConfiguration
 
 This approach lets the user provide their configuration via IConfiguration, such as `appsettings.json`, and/or environment variables loaded into `IConfiguration` etc.
 
@@ -84,6 +84,53 @@ builder.Services.AddPayroc(options =>
                                 options.ApiKey = "test";
                                 options.Environment = PayrocEnvironment.LocalEmulation;
                             });
+```
+
+### Example SDK calls
+
+#### Simple
+
+```csharp
+await payroc
+        .CreateSession()
+        .CreateMerchant(IdempotencyKey.New(), data);
+```
+
+#### Session Re-use
+
+```csharp
+var session = payroc.CreateSession();
+_ = await session.CreateMerchant(IdempotencyKey.New(), data);
+_ = await session.ListMerchants();
+```
+
+#### With Unhappy Path Handling
+```csharp
+var session = payroc.CreateSession();
+var createdResult = await session.CreateMerchant(IdempotencyKey.New(), data);
+
+if (createdResult.IsSuccess)
+{
+    var listMerchantsResult = await session.ListMerchants();
+
+    if (listMerchantsResult.IsSuccess)
+    {
+        foreach (var merchant in listMerchantsResult.Content.Data)
+        {
+            Console.WriteLine("Found Merchant {MerchantId}", merchant.MerchantPlatformId);
+        }
+    }
+    else
+    {
+        var error = listMerchantsResult.Error;
+        Console.WriteLine("Non-Exceptional error encountered: {Error} {Title} {Details}", error.SdkError, error.Title, error.Details);
+    }
+}
+else
+{
+    var error = createdResult.Error;
+    Console.WriteLine("Non-Exceptional error encountered: {Error} {Title} {Details}", error.SdkError, error.Title, error.Details);
+}
 ```
 
 ## Small Details
