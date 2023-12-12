@@ -27,7 +27,6 @@ Although Nuget would be used in a real scenario, for this demo a Test Harness pr
 | [PayrocSession.Authentication.cs](/src/Payroc.Sdk/Web/PayrocSession.Authentication.cs)                    | Caching tokens, and passing API calls through `EnsureAuthenticated` to hide OAuth complexity |
 | [IPayrocSession.cs](/src/Payroc.Sdk/Web/IPayrocSession.cs)                                                | Typical top-level UX of an API call |
 | [ApiProxy.cs](/src/Payroc.Sdk/Web/ApiProxy.cs)                                                            | Main guts of API calls (note adjacent `partial class` variations |
-| [ApiProxy.cs](/src/Payroc.Sdk/Web/ApiProxy.cs)                                                            | Main guts of API calls (note adjacent `partial class` variations |
 | [PayrocLoggerFactory.cs](/src/Payroc.Sdk/Dependencies/PayrocLoggerFactory.cs)                             | How to allow both DI loggers and manual construction |
 
 ## Getting Started (Using the SDK)
